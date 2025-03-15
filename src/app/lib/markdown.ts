@@ -47,11 +47,8 @@ export async function getAllPosts(): Promise<BlogPost[]> {
 export async function getAllPostSlugs() {
   const fileNames = fs.readdirSync(postsDirectory);
   return fileNames.map(fileName => {
-    const slug = fileName.replace(/\.md$/, '');
     return {
-      params: {
-        slug: slug
-      }
+      slug: fileName.replace(/\.md$/, '')
     };
   });
 }

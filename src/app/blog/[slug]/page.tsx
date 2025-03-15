@@ -51,7 +51,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+// 定义页面组件的参数类型
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
+export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(params.slug);
   
   if (!post) {
