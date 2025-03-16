@@ -1,4 +1,3 @@
-import { getAllCategories } from "../data/blogData";
 import { getAllPosts } from "../lib/markdown";
 import ClientOnly from "../components/ClientOnly";
 import Skeleton from "../components/Skeleton";
