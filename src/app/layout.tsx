@@ -3,7 +3,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/ThemeProvider";
-import 'prismjs/themes/prism-tomorrow.css';
 import PageTransition from "./components/PageTransition";
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';

@@ -3,12 +3,6 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
-import remarkRehype from 'remark-rehype';
-import rehypeHighlight from 'rehype-highlight';
-import rehypeStringify from 'rehype-stringify';
 
 // 博客文章目录路径
 const postsDirectory = path.join(process.cwd(), 'posts');
@@ -63,15 +57,6 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
     
-    // 处理Markdown内容
-    const processedContent = await unified()
-      .use(remarkParse)
-      .use(remarkGfm)
-      .use(remarkRehype, { allowDangerousHtml: true }) // 允许HTML
-      .use(rehypeHighlight) // 代码高亮
-      .use(rehypeStringify, { allowDangerousHtml: true }) // 允许HTML
-      .process(content);
-
     // 确保imageUrl是有效的URL格式
     let imageUrl = data.imageUrl || '/vercel.svg';
     if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
@@ -84,7 +69,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
       date: data.date,
       author: data.author,
       excerpt: data.excerpt,
-      content: processedContent.toString(),
+      content: content, // 返回原始内容，不进行服务器端处理
       readCount: 0,
       imageUrl: imageUrl,
       category: data.category || '未分类',
@@ -94,14 +79,6 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     console.error(`Error reading post ${decodedSlug}:`, error);
     return null;
   }
-}
-
-// 计算文章阅读时间（假设平均阅读速度为每分钟200字）
-function calculateReadTime(content: string): string {
-  const wordsPerMinute = 200;
-  const wordCount = content.split(/\s+/).length;
-  const readTime = Math.ceil(wordCount / wordsPerMinute);
-  return `${readTime} 分钟`;
 }
 
 // 获取所有标签

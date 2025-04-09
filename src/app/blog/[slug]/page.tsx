@@ -6,11 +6,8 @@ import Tag from "../../components/Tag";
 import CommentSection from "../../components/CommentSection";
 import { siteConfig } from "../../config/siteConfig";
 import BlogPostClient from "./BlogPostClient";
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
 import Image from 'next/image';
-import type { Components } from 'react-markdown';
+import BlogPostContent from "./BlogPostContent";
 
 // 生成静态页面路径
 export async function generateStaticParams() {
@@ -64,67 +61,6 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) {
     notFound();
   }
-
-  const customComponents: Components = {
-    a(props) {
-      const { href, children, ...rest } = props;
-      return (
-        <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>
-          {children}
-        </a>
-      );
-    },
-    code(props) {
-      const {className, children, node, ...rest} = props;
-      const match = /language-(\w+)/.exec(className || '');
-      
-      if (match && children) {
-        return (
-          <div className="relative">
-            <pre className={className}>
-              <code {...rest} className={className}>
-                {children}
-              </code>
-            </pre>
-            {match[1] && (
-              <div className="absolute top-0 right-0 bg-gray-700 text-gray-100 rounded-bl px-2 py-1 text-xs font-mono">
-                {match[1]}
-              </div>
-            )}
-          </div>
-        );
-      }
-      
-      return (
-        <code {...rest} className={className}>
-          {children}
-        </code>
-      );
-    },
-    pre(props) {
-      const {children, ...rest} = props;
-      return (
-        <pre {...rest} className="overflow-auto p-4 rounded-lg">
-          {children}
-        </pre>
-      );
-    },
-    img(props) {
-      const {src, alt} = props;
-      if (!src) return null;
-      return (
-        <div className="relative aspect-[16/9] my-8">
-          <Image
-            src={src}
-            alt={alt || ''}
-            fill
-            className="object-cover rounded-lg"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-          />
-        </div>
-      );
-    }
-  };
   
   return (
     <PageLayout
@@ -155,9 +91,9 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </div>
       
-      {/* 文章内容 */}
+      {/* 文章内容 - 使用客户端组件包装Markdown渲染 */}
       <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-indigo-600 dark:prose-a:text-indigo-400 hover:prose-a:text-indigo-500 dark:hover:prose-a:text-indigo-300 prose-code:text-pink-500 dark:prose-code:text-pink-400 prose-pre:bg-gray-50 dark:prose-pre:bg-gray-800 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700 prose-pre:rounded-lg prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:italic prose-strong:text-gray-900 dark:prose-strong:text-white prose-em:text-gray-900 dark:prose-em:text-white prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-table:border-collapse prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:p-2 prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:p-2 markdown-body">
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        <BlogPostContent content={post.content} />
       </div>
       
       {/* 作者信息 */}

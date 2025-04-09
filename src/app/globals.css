@@ -75,106 +75,6 @@
   }
 }
 
-/* 代码高亮样式 */
-.code-block {
-  margin: 1.5rem 0;
-  border-radius: 0.5rem;
-  overflow: hidden;
-}
-
-.code-block pre {
-  margin: 0 !important;
-  padding: 1rem !important;
-  background-color: #2d2d2d !important;
-  border-radius: 0 !important;
-  overflow-x: auto;
-}
-
-.code-block code {
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  background: transparent !important;
-  padding: 0 !important;
-  color: #f8f8f2 !important;
-}
-
-/* 代码高亮的语法颜色 */
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-  color: #8292a2;
-}
-
-.token.punctuation {
-  color: #f8f8f2;
-}
-
-.token.namespace {
-  opacity: 0.7;
-}
-
-.token.property,
-.token.tag,
-.token.constant,
-.token.symbol,
-.token.deleted {
-  color: #f92672;
-}
-
-.token.boolean,
-.token.number {
-  color: #ae81ff;
-}
-
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
-  color: #a6e22e;
-}
-
-.token.operator,
-.token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string,
-.token.variable {
-  color: #f8f8f2;
-}
-
-.token.atrule,
-.token.attr-value,
-.token.function,
-.token.class-name {
-  color: #e6db74;
-}
-
-.token.keyword {
-  color: #66d9ef;
-}
-
-.token.regex,
-.token.important {
-  color: #fd971f;
-}
-
-.token.important,
-.token.bold {
-  font-weight: bold;
-}
-
-.token.italic {
-  font-style: italic;
-}
-
-.token.entity {
-  cursor: help;
-}
-
 @layer utilities {
   .animate-fade-in {
     animation: fadeIn 1s ease-in;
@@ -278,19 +178,19 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.7;
   }
 }
 
 @keyframes svgPulse {
   0% {
-    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.4));
   }
   50% {
-    transform: translateY(-1%) scale(1.01);
+    filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.8));
   }
   100% {
-    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.4));
   }
 }
 
@@ -382,17 +282,13 @@
   @apply border border-gray-300 dark:border-gray-700 px-4 py-2;
 }
 
-/* 代码块样式 */
-.markdown-content .code-block {
-  @apply my-4 rounded-lg overflow-hidden;
-}
-
+/* 代码样式 - 兼容react-syntax-highlighter */
 .markdown-content code {
   @apply bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-indigo-600 dark:text-indigo-400;
 }
 
 .markdown-content pre {
-  @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto;
+  @apply my-4 rounded-lg overflow-x-auto;
 }
 
 .markdown-content pre code {

@@ -14,9 +14,8 @@
 
 ### 内容管理
 - **gray-matter**: 解析Markdown文件的前置元数据
-- **unified**: 统一处理Markdown解析流程
-- **remark/rehype系列**: Markdown转HTML处理
-- **react-markdown**: React中渲染Markdown内容
+- **react-markdown**: 客户端Markdown渲染
+- **remark-gfm**: GitHub风格Markdown支持
 - **react-syntax-highlighter**: 代码语法高亮
 
 ## 项目架构概述
@@ -36,6 +35,9 @@
 │   │   ├── about/   # 关于页面路由
 │   │   ├── blog/    # 博客相关路由
 │   │   │   ├── [slug]/ # 动态路由(博客详情)
+│   │   │   │   ├── page.tsx # 博客详情页面
+│   │   │   │   ├── BlogPostContent.tsx # 客户端Markdown包装组件
+│   │   │   │   └── MarkdownRenderer.tsx # Markdown渲染组件
 │   │   │   ├── page.tsx # 博客列表页
 │   │   │   └── BlogList.tsx # 博客列表组件
 │   │   ├── projects/ # 项目展示路由
@@ -89,19 +91,20 @@
 - **SEO**: SEO元标签管理组件
 - **CommentSection**: 评论功能组件
 - **Icon**: SVG图标组件库
+- **BlogPostContent**: 客户端组件，负责动态导入并包装MarkdownRenderer
+- **MarkdownRenderer**: 客户端Markdown渲染组件，负责处理Markdown和代码高亮
 
 ## 数据流架构
 
 ### 博客内容处理流程
 1. **存储层**: Markdown文件存储在`posts`目录
 2. **解析层**: 使用`gray-matter`解析Markdown文件的前置元数据
-3. **处理层**: 使用`unified`生态系统处理Markdown内容
-   - `remark-parse`: 将Markdown解析为抽象语法树
-   - `remark-gfm`: 支持GitHub风格的Markdown扩展
-   - `remark-rehype`: 将Markdown AST转换为HTML AST
-   - `rehype-highlight`: 代码块语法高亮
-   - `rehype-stringify`: 将HTML AST转换为HTML字符串
-4. **展示层**: 使用`react-markdown`或自定义组件渲染处理后的内容
+3. **服务器数据获取**: 服务器组件获取原始Markdown内容和元数据
+4. **客户端渲染**: 使用分层的客户端组件在客户端渲染Markdown内容
+   - 使用`BlogPostContent`客户端组件动态导入`MarkdownRenderer`
+   - 利用`react-markdown`处理Markdown
+   - 使用`remark-gfm`支持GitHub风格Markdown
+   - 使用`react-syntax-highlighter`实现代码高亮，支持多种主题和语言
 
 ### 主题管理流程
 1. **ThemeProvider**: 使用`next-themes`管理主题状态
@@ -117,16 +120,25 @@
 
 ### 代码拆分
 - 使用Next.js的自动代码拆分
-- 动态导入非关键组件，如`MouseFollower`
+- 动态导入非关键组件，如`MouseFollower`和`MarkdownRenderer`
 
 ### 延迟加载
 - 使用`dynamic`导入非首屏必需的组件
 - 使用`Suspense`和`loading`属性处理加载状态
+- 在客户端组件中使用dynamic导入，避免服务器组件中的`ssr: false`错误
+
+### 依赖优化
+- 精简项目依赖，移除未使用的包和重复功能的包
+- 统一使用`react-syntax-highlighter`处理代码高亮
+- 移除冗余的CSS样式，避免样式冲突
+- 定期使用`npm prune`清理未声明的依赖
 
 ### 服务器组件与客户端组件分离
 - 将数据获取逻辑放在服务器组件中
 - 使用"use client"指令标记客户端组件
 - 使用`ClientOnly`组件避免服务器渲染引起的水合不匹配
+- Markdown内容处理移至客户端，减轻服务器负担
+- 使用多层客户端组件结构，正确处理动态导入
 
 ### 图像优化
 - 使用Next.js的Image组件进行自动优化
@@ -150,6 +162,10 @@
 1. 在`posts`目录下创建新的Markdown文件
 2. 添加必要的前置元数据
 3. 使用现有`scripts/create-post.js`脚本自动化创建过程
+
+### 自定义代码高亮主题
+1. 从`react-syntax-highlighter/dist/cjs/styles/prism`导入不同的主题样式
+2. 在`MarkdownRenderer`组件中修改SyntaxHighlighter的style属性
 
 ## 部署架构
 
@@ -175,8 +191,11 @@
 - 实现流式SSR(Streaming SSR)
 - 添加服务器组件缓存
 - 优化首次加载性能
+- 实现代码高亮主题跟随系统主题自动切换
+- 定期审查并清理项目依赖
 
 ### 开发体验
 - 添加单元测试
 - 集成E2E测试
-- 改进开发工具脚本 
+- 改进开发工具脚本
+- 实现依赖分析和监控工具集成 
