@@ -8,7 +8,7 @@
 - **样式**：Tailwind CSS
 - **动画**：Framer Motion
 - **内容管理**：Markdown (gray-matter)
-- **代码高亮**：Prism.js, React Syntax Highlighter
+- **代码高亮**：React Syntax Highlighter
 
 ## 主要特性
 
