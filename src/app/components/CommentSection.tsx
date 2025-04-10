@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  getCommentsByPostId, 
-  addComment, 
-  likeComment, 
-  replyToComment,
+  fetchCommentsByPostId,
+  submitComment, 
+  likeCommentApi,
   formatCommentTime,
   generateAvatar,
   type Comment
@@ -26,16 +25,29 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
   // 获取评论
   useEffect(() => {
     if (siteConfig.blog.enableComments) {
-      setComments(getCommentsByPostId(postId));
+      const getComments = async () => {
+        setIsLoading(true);
+        try {
+          const commentsData = await fetchCommentsByPostId(postId);
+          setComments(commentsData);
+        } catch (err) {
+          console.error("获取评论失败", err);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      getComments();
     }
   }, [postId]);
   
   // 提交评论
-  const handleSubmitComment = (e: React.FormEvent) => {
+  const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
@@ -63,19 +75,19 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       
       // 如果是回复评论
       if (replyTo) {
-        newComment = replyToComment(
+        newComment = await submitComment({
           postId,
-          replyTo.id,
-          name,
+          parentId: replyTo.id,
+          author: name,
           content,
           email,
-          email ? undefined : generateAvatar(name)
-        ) as Comment;
+          avatar: email ? undefined : generateAvatar(name)
+        });
         
         setReplyTo(null);
       } else {
         // 如果是新评论
-        newComment = addComment({
+        newComment = await submitComment({
           postId,
           author: name,
           content,
@@ -101,8 +113,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   };
   
   // 点赞评论
-  const handleLikeComment = (commentId: string) => {
-    const updatedComment = likeComment(commentId);
+  const handleLikeComment = async (commentId: string) => {
+    const updatedComment = await likeCommentApi(commentId);
     if (updatedComment) {
       setComments(prev => 
         prev.map(c => c.id === commentId ? updatedComment : c)
@@ -244,22 +256,41 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         评论 ({comments.length})
       </h2>
       
+      {/* 加载状态 */}
+      {isLoading ? (
+        <div className="flex justify-center items-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+        </div>
+      ) : (
+        <>
+          {/* 评论列表 */}
+          {commentTree.length > 0 ? (
+            <div className="space-y-4 mb-8">
+              {commentTree.map(comment => renderComment(comment))}
+            </div>
+          ) : (
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center mb-8">
+              <p className="text-gray-600 dark:text-gray-400">还没有评论，成为第一个评论的人吧！</p>
+            </div>
+          )}
+        </>
+      )}
+      
       {/* 评论表单 */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="bg-white dark:bg-gray-800 rounded-lg p-6 mb-8 shadow-md"
+        className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm"
         id="comment-form"
       >
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {replyTo ? `回复 ${replyTo.author}` : "发表评论"}
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          {replyTo ? `回复 ${replyTo.author} 的评论` : "发表评论"}
         </h3>
         
         {replyTo && (
-          <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              <span className="font-semibold">{replyTo.author}:</span> {replyTo.content}
+          <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
+            <p className="text-gray-700 dark:text-gray-300 text-sm italic">
+              "{replyTo.content}"
             </p>
             <button
               onClick={handleCancelReply}
@@ -270,96 +301,83 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           </div>
         )}
         
+        {error && (
+          <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 p-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+        
+        {success && (
+          <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 p-3 rounded-lg mb-4">
+            {success}
+          </div>
+        )}
+        
         <form onSubmit={handleSubmitComment}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                名字 <span className="text-red-500">*</span>
+              <label htmlFor="name" className="block text-gray-700 dark:text-gray-300 mb-1">
+                昵称 <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 id="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                onChange={e => setName(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 required
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                邮箱 {!siteConfig.blog.comments.allowAnonymous && <span className="text-red-500">*</span>}
+              <label htmlFor="email" className="block text-gray-700 dark:text-gray-300 mb-1">
+                邮箱（选填，不会公开）
               </label>
               <input
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                required={!siteConfig.blog.comments.allowAnonymous}
+                onChange={e => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="content" className="block text-gray-700 dark:text-gray-300 mb-1">
               评论内容 <span className="text-red-500">*</span>
             </label>
             <textarea
               id="content"
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={e => setContent(e.target.value)}
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               required
-              maxLength={siteConfig.blog.comments.maxLength}
-            />
-            <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-              <span>支持纯文本</span>
-              <span>{content.length}/{siteConfig.blog.comments.maxLength}</span>
+            ></textarea>
+            <div className="text-right text-sm text-gray-500 dark:text-gray-400 mt-1">
+              {content.length}/{siteConfig.blog.comments.maxLength}
             </div>
           </div>
-          
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-md">
-              {error}
-            </div>
-          )}
-          
-          {success && (
-            <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-md">
-              {success}
-            </div>
-          )}
-          
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow-sm transition-colors duration-300 disabled:opacity-50"
-            >
-              {isSubmitting ? "提交中..." : replyTo ? "回复" : "发表评论"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-700 dark:hover:bg-indigo-600 ${
+              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                提交中...
+              </span>
+            ) : (
+              '提交评论'
+            )}
+          </button>
         </form>
       </motion.div>
-      
-      {/* 评论列表 */}
-      <div className="space-y-4">
-        <AnimatePresence>
-          {commentTree.length > 0 ? (
-            commentTree.map(comment => renderComment(comment))
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-8"
-            >
-              <p className="text-gray-600 dark:text-gray-400">
-                暂无评论，成为第一个评论的人吧！
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
     </div>
   );
 } 
