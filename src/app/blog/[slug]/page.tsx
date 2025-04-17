@@ -17,7 +17,8 @@ export async function generateStaticParams() {
 
 // 生成元数据
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const resolvedParams = params;
+  const post = await getPostBySlug(resolvedParams.slug);
   
   if (!post) {
     return {
@@ -56,7 +57,8 @@ type Props = {
 };
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await getPostBySlug(params.slug);
+  const resolvedParams = await params;
+  const post = await getPostBySlug(resolvedParams.slug);
   
   if (!post) {
     notFound();

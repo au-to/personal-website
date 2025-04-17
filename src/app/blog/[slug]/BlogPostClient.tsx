@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { BlogPost } from '../../lib/markdown';
-import { incrementReadCount, formatReadCount } from '../../lib/clientUtils';
+import { incrementReadCount, formatReadCount, getReadCount } from '../../lib/clientUtils';
 import { siteConfig } from '../../config/siteConfig';
 
 interface BlogPostClientProps {
@@ -19,17 +19,30 @@ function formatDate(dateString: string): string {
 }
 
 export default function BlogPostClient({ post }: BlogPostClientProps) {
-  const [readCount, setReadCount] = useState(post.readCount);
-  const [hasIncremented, setHasIncremented] = useState(false);
+  const [readCount, setReadCount] = useState<number>(post.readCount);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!hasIncremented) {
-      // 增加阅读计数
-      const newCount = incrementReadCount(post.slug);
-      setReadCount(newCount);
-      setHasIncremented(true);
+    async function updateReadCount() {
+      try {
+        setIsLoading(true);
+        
+        // 首先获取当前阅读计数
+        const currentCount = await getReadCount(post.slug);
+        setReadCount(currentCount);
+        
+        // 然后增加阅读计数
+        const newCount = await incrementReadCount(post.slug);
+        setReadCount(newCount);
+      } catch (error) {
+        console.error('更新阅读计数失败', error);
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }, [post.slug, hasIncremented]);
+    
+    updateReadCount();
+  }, [post.slug]);
 
   return (
     <div className="flex flex-wrap items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
@@ -59,7 +72,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
               />
             </svg>
-            {formatReadCount(readCount)} 次阅读
+            {isLoading ? '加载中...' : `${formatReadCount(readCount)} 次阅读`}
           </span>
         </>
       )}
