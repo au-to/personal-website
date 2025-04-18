@@ -5,18 +5,23 @@
 ## 核心技术栈
 
 ### 前端框架与工具
-- **Next.js 15.2.2**: 使用App Router架构
+- **Next.js 15.2.2**: 使用App Router架构和Turbopack加速开发
 - **React 18.2.0**: 用于构建用户界面
 - **TypeScript**: 提供类型安全
-- **Tailwind CSS**: 原子化CSS框架
+- **Tailwind CSS**: 原子化CSS框架 + @tailwindcss/typography插件
 - **Framer Motion**: 实现高级动画效果
 - **Next Themes**: 深色/浅色主题切换
+- **@heroicons/react**: 提供图标支持
 
 ### 内容管理
 - **gray-matter**: 解析Markdown文件的前置元数据
 - **react-markdown**: 客户端Markdown渲染
 - **remark-gfm**: GitHub风格Markdown支持
 - **react-syntax-highlighter**: 代码语法高亮
+
+### 数据存储
+- **MongoDB**: 用于存储评论和阅读计数
+- **Mongoose**: MongoDB对象模型工具
 
 ## 项目架构概述
 
@@ -26,16 +31,20 @@
 ├── public/          # 静态资源
 ├── posts/           # 博客文章(Markdown)
 ├── scripts/         # 辅助脚本
+│   └── create-post.js  # 创建新博客文章的脚本
 ├── src/
 │   ├── app/         # 应用主目录 (App Router)
 │   │   ├── components/  # 可复用组件
 │   │   ├── lib/     # 工具函数库
+│   │   ├── models/  # 数据模型
 │   │   ├── data/    # 数据文件
 │   │   ├── config/  # 配置文件
+│   │   ├── api/     # API路由
 │   │   ├── about/   # 关于页面路由
 │   │   ├── blog/    # 博客相关路由
 │   │   │   ├── [slug]/ # 动态路由(博客详情)
 │   │   │   │   ├── page.tsx # 博客详情页面
+│   │   │   │   ├── BlogPostClient.tsx # 客户端博客组件
 │   │   │   │   ├── BlogPostContent.tsx # 客户端Markdown包装组件
 │   │   │   │   └── MarkdownRenderer.tsx # Markdown渲染组件
 │   │   │   ├── page.tsx # 博客列表页
@@ -48,6 +57,7 @@
 ├── tailwind.config.js # Tailwind配置
 ├── next.config.ts    # Next.js配置
 ├── tsconfig.json     # TypeScript配置
+├── postcss.config.mjs # PostCSS配置
 └── package.json      # 项目依赖和脚本
 ```
 
@@ -58,6 +68,7 @@
 - `/blog/[slug]`: 博客文章详情页
 - `/projects`: 项目展示页
 - `/tech`: 技术栈展示页
+- `/api/*`: API路由
 
 ## 组件系统
 
@@ -73,6 +84,7 @@
 - **ProjectCard**: 项目展示卡片
 - **Tag**: 标签组件
 - **Skeleton**: 加载骨架屏
+- **Icon**: SVG图标组件库
 
 ### 交互与动画组件
 - **AnimatedElement**: 多种动画效果的元素包装器
@@ -90,7 +102,7 @@
 - **ClientOnly**: 确保组件仅在客户端渲染
 - **SEO**: SEO元标签管理组件
 - **CommentSection**: 评论功能组件
-- **Icon**: SVG图标组件库
+- **BlogPostClient**: 客户端博客组件，负责显示博客内容和处理交互
 - **BlogPostContent**: 客户端组件，负责动态导入并包装MarkdownRenderer
 - **MarkdownRenderer**: 客户端Markdown渲染组件，负责处理Markdown和代码高亮
 
@@ -101,10 +113,17 @@
 2. **解析层**: 使用`gray-matter`解析Markdown文件的前置元数据
 3. **服务器数据获取**: 服务器组件获取原始Markdown内容和元数据
 4. **客户端渲染**: 使用分层的客户端组件在客户端渲染Markdown内容
+   - 使用`BlogPostClient`客户端组件处理博客渲染和交互逻辑
    - 使用`BlogPostContent`客户端组件动态导入`MarkdownRenderer`
    - 利用`react-markdown`处理Markdown
    - 使用`remark-gfm`支持GitHub风格Markdown
    - 使用`react-syntax-highlighter`实现代码高亮，支持多种主题和语言
+
+### 阅读计数和评论数据流
+1. **数据存储**: 使用MongoDB存储阅读计数和评论数据
+2. **连接层**: 使用`mongodb.ts`建立与MongoDB的连接
+3. **读取层**: 使用`readCountUtils.ts`处理阅读计数逻辑
+4. **UI层**: 使用`CommentSection`组件显示和管理评论
 
 ### 主题管理流程
 1. **ThemeProvider**: 使用`next-themes`管理主题状态
@@ -126,6 +145,12 @@
 - 使用`dynamic`导入非首屏必需的组件
 - 使用`Suspense`和`loading`属性处理加载状态
 - 在客户端组件中使用dynamic导入，避免服务器组件中的`ssr: false`错误
+- 使用`ClientOnly`组件确保客户端专属功能仅在客户端渲染
+
+### 数据获取优化
+- 使用MongoDB进行高效的数据存储和检索
+- 实现阅读计数增量更新
+- 评论数据分页加载
 
 ### 依赖优化
 - 精简项目依赖，移除未使用的包和重复功能的包
@@ -147,6 +172,7 @@
 ### 缓存策略
 - 静态生成(SSG)用于内容不经常变化的页面
 - 增量静态再生成(ISR)用于需要定期更新的内容
+- MongoDB数据缓存
 
 ## 扩展性设计
 
@@ -167,6 +193,11 @@
 1. 从`react-syntax-highlighter/dist/cjs/styles/prism`导入不同的主题样式
 2. 在`MarkdownRenderer`组件中修改SyntaxHighlighter的style属性
 
+### 添加新的数据模型
+1. 在`models`目录下创建新的模型文件
+2. 定义mongoose Schema和Model
+3. 创建相应的API路由
+
 ## 部署架构
 
 ### 构建流程
@@ -179,13 +210,18 @@
 - **Netlify**: 支持Next.js静态导出
 - **自托管**: 使用Node.js服务器或静态文件服务器
 
+### 环境变量
+- **MONGODB_URI**: MongoDB连接字符串
+- **[其他环境变量]**: 其他需要的配置参数
+
 ## 未来扩展计划
 
 ### 功能增强
 - 集成CMS系统
 - 添加用户认证
-- 实现博客评论系统
+- 增强博客评论系统
 - 添加搜索功能
+- 实现国际化支持
 
 ### 性能优化
 - 实现流式SSR(Streaming SSR)

@@ -1,14 +1,19 @@
 # 个人网站项目
 
-这是一个使用Next.js构建的现代化个人网站，具有炫酷的动画效果和响应式设计。
+这是一个使用Next.js构建的现代化个人网站，具有炫酷的动画效果、响应式设计和博客系统。
 
 ## 技术栈
 
-- **前端框架**：Next.js 15.2.2
-- **样式**：Tailwind CSS
+- **前端框架**：Next.js 15.2.2 (使用App Router和Turbopack)
+- **UI库**：React 18.2.0
+- **类型系统**：TypeScript
+- **样式**：Tailwind CSS + @tailwindcss/typography
 - **动画**：Framer Motion
-- **内容管理**：Markdown (gray-matter)
+- **内容管理**：Markdown (gray-matter + react-markdown)
 - **代码高亮**：React Syntax Highlighter
+- **图标**：@heroicons/react
+- **主题切换**：next-themes
+- **数据库**：MongoDB + Mongoose
 
 ## 主要特性
 
@@ -20,7 +25,10 @@
   - 视差滚动
   - 元素动画
 - Markdown博客系统
+- 文章阅读计数统计
+- 评论系统
 - 项目展示
+- 技术栈展示
 - SEO优化
 
 ## 动画组件
@@ -40,24 +48,59 @@
 ├── public/          # 静态资源
 ├── posts/           # 博客文章(Markdown)
 ├── src/
-│   ├── app/         # 应用主目录
+│   ├── app/         # 应用主目录 (App Router)
 │   │   ├── components/  # 组件
+│   │   │   ├── AnimatedElement.tsx  # 动画元素组件
+│   │   │   ├── Button.tsx           # 按钮组件
+│   │   │   ├── Card.tsx             # 卡片组件
+│   │   │   ├── ClientOnly.tsx       # 客户端渲染包装器
+│   │   │   ├── CommentSection.tsx   # 评论区组件
+│   │   │   ├── Footer.tsx           # 页脚组件
+│   │   │   ├── Icon.tsx             # 图标组件
+│   │   │   ├── MouseFollower.tsx    # 鼠标跟随组件
+│   │   │   ├── Navbar.tsx           # 导航栏组件
+│   │   │   ├── PageLayout.tsx       # 页面布局组件
+│   │   │   ├── PageTransition.tsx   # 页面过渡动画组件
+│   │   │   ├── ParallaxSection.tsx  # 视差滚动组件
+│   │   │   ├── ProjectCard.tsx      # 项目卡片组件
+│   │   │   ├── SEO.tsx              # SEO元标签组件
+│   │   │   ├── Skeleton.tsx         # 加载骨架屏组件
+│   │   │   ├── Tag.tsx              # 标签组件
+│   │   │   └── ThemeProvider.tsx    # 主题提供者组件
 │   │   ├── lib/     # 工具函数
+│   │   │   ├── clientUtils.ts       # 客户端通用工具
+│   │   │   ├── markdown.ts          # Markdown处理工具
+│   │   │   ├── mongodb.ts           # MongoDB连接工具
+│   │   │   └── readCountUtils.ts    # 阅读计数工具
+│   │   ├── models/  # 数据模型
 │   │   ├── data/    # 数据文件
 │   │   ├── config/  # 配置文件
+│   │   ├── api/     # API路由
 │   │   ├── about/   # 关于页面
 │   │   ├── blog/    # 博客页面
+│   │   │   ├── [slug]/              # 博客文章详情页
+│   │   │   │   ├── page.tsx             # 博客详情页面
+│   │   │   │   ├── BlogPostClient.tsx   # 博客客户端组件
+│   │   │   │   ├── BlogPostContent.tsx  # 博客内容包装组件
+│   │   │   │   └── MarkdownRenderer.tsx # Markdown渲染组件
+│   │   │   ├── page.tsx             # 博客列表页
+│   │   │   └── BlogList.tsx         # 博客列表组件
 │   │   ├── projects/# 项目页面
 │   │   ├── tech/    # 技术页面
 │   │   ├── page.tsx # 首页
-│   │   └── layout.tsx # 布局组件
-│   └── types/       # TypeScript类型定义
-└── scripts/         # 辅助脚本
+│   │   ├── layout.tsx # 布局组件
+│   │   └── globals.css # 全局样式
+├── scripts/         # 辅助脚本
+│   └── create-post.js  # 创建新博客文章的脚本
+├── tailwind.config.js # Tailwind配置
+├── next.config.ts    # Next.js配置
+├── tsconfig.json     # TypeScript配置
+└── package.json      # 项目依赖和脚本
 ```
 
 ## 博客文章管理
 
-本项目使用Markdown文件来存储博客文章，所有文章都存放在`posts`目录下。
+本项目使用Markdown文件来存储博客文章，所有文章都存放在`posts`目录下。每篇文章的阅读计数和评论数据存储在MongoDB数据库中。
 
 ### 创建新文章
 
@@ -85,11 +128,7 @@ imageUrl: "封面图片URL"
 ---
 ```
 
-正文部分使用Markdown格式编写，支持所有标准的Markdown语法。
-
-### 文章URL
-
-文章的URL由文件名（不包括.md扩展名）决定。例如，文件名为`react-18-features.md`的文章，其URL为`/blog/react-18-features`。
+正文部分使用Markdown格式编写，支持GitHub风格Markdown（通过remark-gfm）和代码语法高亮。
 
 ## 开发指南
 
@@ -104,6 +143,8 @@ npm install
 ```bash
 npm run dev
 ```
+
+项目使用Turbopack加速开发环境构建。
 
 ### 构建项目
 
@@ -136,6 +177,10 @@ npm run lint
 ### 添加新页面
 
 在`src/app`目录下创建新的目录和`page.tsx`文件。
+
+### 连接数据库
+
+在`.env.local`文件中设置`MONGODB_URI`环境变量来连接MongoDB数据库。
 
 ## 许可证
 
