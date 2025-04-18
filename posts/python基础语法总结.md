@@ -5,7 +5,7 @@ date: "2025-03-15"
 author: "Ryan"
 category: "python"
 tags: ["python"]
-imageUrl: "/images/python.webp"
+imageUrl: "/images/python基础语法总结.png"
 ---
 
 # python基础语法总结
