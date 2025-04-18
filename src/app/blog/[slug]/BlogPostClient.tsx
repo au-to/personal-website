@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { BlogPost } from '../../lib/markdown';
 import { incrementReadCount, formatReadCount, getReadCount } from '../../lib/clientUtils';
-import { siteConfig } from '../../config/siteConfig';
+import { siteConfig } from '../../../../siteConfig';
 
 interface BlogPostClientProps {
   post: BlogPost;

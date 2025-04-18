@@ -2,8 +2,10 @@
 
 export const siteConfig = {
   // 网站基本信息
-  siteName: "我的个人空间",
-  siteDescription: "分享技术、项目和个人成长",
+  siteName: "Ryan的个人空间",
+  logo: '/logo.png',
+  title: "欢迎来到我的个人空间",
+  description: '探索、创造、分享',
   
   // 博客功能配置
   blog: {
@@ -37,4 +39,4 @@ export const siteConfig = {
     // 每页显示的文章数量（预留分页功能）
     postsPerPage: 9
   }
-}; 
+}

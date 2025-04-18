@@ -9,6 +9,7 @@ import Card from "./components/Card";
 import Skeleton from "./components/Skeleton";
 import AnimatedElement from "./components/AnimatedElement";
 import ParallaxSection from "./components/ParallaxSection";
+import { siteConfig } from "../../siteConfig";
 
 export default function Home() {
   // 骨架屏
@@ -116,13 +117,13 @@ export default function Home() {
           <div className="relative z-10 text-center px-4">
             <AnimatedElement type="scale" className="mb-6">
               <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-blue-500 to-sky-500 hover-scale">
-                欢迎来到我的个人空间
+                { siteConfig.title }
               </h1>
             </AnimatedElement>
             
             <AnimatedElement type="fadeInUp" delay={0.2} className="mb-8">
               <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300">
-                探索、创造、分享
+                { siteConfig.description }
               </p>
             </AnimatedElement>
             

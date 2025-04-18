@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { BlogPost } from "../data/blogData";
-import { siteConfig } from "../config/siteConfig";
+import { siteConfig } from "../../../siteConfig";
 import PageLayout from "../components/PageLayout";
 import Card from "../components/Card";
 import Tag from "../components/Tag";

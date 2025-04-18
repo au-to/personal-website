@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { siteConfig } from '../../../siteConfig'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,13 +33,20 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className={`text-xl font-bold ${
+            className={`flex items-center space-x-2 text-xl font-bold ${
               isScrolled
                 ? "text-gray-900 dark:text-white"
                 : "text-white"
             }`}
           >
-            我的空间
+            <Image 
+              src={siteConfig.logo} 
+              alt="站点Logo" 
+              width={24} 
+              height={24} 
+              className="h-6 w-auto" 
+            />
+            <span>{ siteConfig.siteName }</span>
           </Link>
 
           {/* 桌面端导航 */}

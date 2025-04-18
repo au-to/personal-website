@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectToDatabase } from '@/app/lib/mongodb'
 import Comment from '@/app/models/Comment'
-import { siteConfig } from '@/app/config/siteConfig'
+import { siteConfig } from '../../../../siteConfig'
 
 // 获取评论列表
 export async function GET(request: NextRequest) {

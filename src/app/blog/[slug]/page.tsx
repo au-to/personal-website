@@ -4,7 +4,7 @@ import { getAllPostSlugs, getPostBySlug } from "../../lib/markdown";
 import PageLayout from "../../components/PageLayout";
 import Tag from "../../components/Tag";
 import CommentSection from "../../components/CommentSection";
-import { siteConfig } from "../../config/siteConfig";
+import { siteConfig } from "../../../../siteConfig";
 import BlogPostClient from "./BlogPostClient";
 import Image from 'next/image';
 import BlogPostContent from "./BlogPostContent";

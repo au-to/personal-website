@@ -10,7 +10,7 @@ import {
   generateAvatar,
   type Comment
 } from "../data/commentData";
-import { siteConfig } from "../config/siteConfig";
+import { siteConfig } from "../../../siteConfig";
 
 interface CommentSectionProps {
   postId: string;

@@ -1,6 +1,6 @@
 // 评论数据模型和相关功能
 
-import { siteConfig } from "../config/siteConfig";
+import { siteConfig } from "../../../siteConfig";
 
 // 评论接口定义
 export interface Comment {
