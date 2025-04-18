@@ -99,16 +99,52 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
 
 export default function BlogList({ posts, categories }: BlogListProps) {
   const [selectedCategory, setSelectedCategory] = useState("全部");
+  const [searchQuery, setSearchQuery] = useState("");
   const [hoveredPost, setHoveredPost] = useState<number | null>(null);
 
-  // 根据选中的分类过滤文章
-  const filteredPosts = selectedCategory === "全部"
-    ? posts
-    : posts.filter(post => post.category === selectedCategory);
+  // 根据搜索和分类过滤文章
+  const filteredPosts = posts.filter(post => {
+    // 先按分类过滤
+    const matchesCategory = selectedCategory === "全部" || post.category === selectedCategory;
+    
+    // 如果没有搜索查询，只按分类过滤
+    if (!searchQuery.trim()) {
+      return matchesCategory;
+    }
+    
+    // 按搜索查询过滤（标题、摘要、内容中包含查询词）
+    const query = searchQuery.toLowerCase().trim();
+    const matchesSearch = 
+      post.title.toLowerCase().includes(query) || 
+      post.excerpt.toLowerCase().includes(query) ||
+      (post.content && post.content.toLowerCase().includes(query)) || 
+      post.tags.some(tag => tag.toLowerCase().includes(query));
+    
+    // 同时满足分类和搜索条件
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <PageLayout title="博客">
       <div className="mb-6">
+        {/* 搜索框 */}
+        <div className="mb-6">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="搜索文章..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            />
+            <Icon 
+              name="search" 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={18}
+            />
+          </div>
+        </div>
+
         <div className="flex flex-wrap gap-2 mb-8">
           {categories.map(category => (
             <Tag 
@@ -121,6 +157,31 @@ export default function BlogList({ posts, categories }: BlogListProps) {
             </Tag>
           ))}
         </div>
+        
+        {/* 搜索结果状态 */}
+        {searchQuery && (
+          <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            找到 {filteredPosts.length} 篇与 "{searchQuery}" 相关的文章
+          </div>
+        )}
+        
+        {/* 没有搜索结果时的提示 */}
+        {filteredPosts.length === 0 && (
+          <div className="py-8 text-center">
+            <div className="text-gray-500 dark:text-gray-400 mb-2">
+              未找到相关文章
+            </div>
+            <button 
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("全部");
+              }}
+              className="text-blue-500 hover:underline"
+            >
+              清除筛选条件
+            </button>
+          </div>
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence>

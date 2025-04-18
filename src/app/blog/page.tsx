@@ -9,9 +9,9 @@ export default async function BlogPage() {
   const markdownPosts = await getAllPosts();
   
   // 转换为与blogData.ts中相同的BlogPost类型
-  const posts: DataBlogPost[] = markdownPosts.map(post => ({
+  const posts: DataBlogPost[] = markdownPosts.map((post, index) => ({
     ...post,
-    id: parseInt(post.slug.replace(/[^0-9]/g, '0')), // 生成一个基于slug的ID
+    id: index + 1, // 使用索引加1确保每篇文章有唯一ID
     readTime: `${Math.ceil(post.content.length / 1000)} 分钟`, // 估算阅读时间
   }));
   
