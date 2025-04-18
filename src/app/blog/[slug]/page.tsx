@@ -117,7 +117,7 @@ export default async function BlogPostPage({ params }: Props) {
       {siteConfig.blog.enableComments && (
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-6">评论</h2>
-          <CommentSection postId={1} />
+          <CommentSection postId={post.slug} />
         </div>
       )}
     </PageLayout>

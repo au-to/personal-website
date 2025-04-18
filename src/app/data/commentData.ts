@@ -5,7 +5,7 @@ import { siteConfig } from "../config/siteConfig";
 // 评论接口定义
 export interface Comment {
   id: string;
-  postId: number;
+  postId: string;
   author: string;
   email?: string;
   content: string;
@@ -17,15 +17,13 @@ export interface Comment {
 }
 
 // 获取评论API
-export async function fetchCommentsByPostId(postId: number | string): Promise<Comment[]> {
+export async function fetchCommentsByPostId(postId: string): Promise<Comment[]> {
   if (!siteConfig.blog.enableComments) {
     return []
   }
   
-  const numericPostId = typeof postId === 'string' ? parseInt(postId.replace(/[^0-9]/g, '')) || 1 : postId
-  
   try {
-    const response = await fetch(`/api/comments?postId=${numericPostId}`)
+    const response = await fetch(`/api/comments?postId=${postId}`)
     
     if (!response.ok) {
       throw new Error('获取评论失败')

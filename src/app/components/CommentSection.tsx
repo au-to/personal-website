@@ -13,7 +13,7 @@ import {
 import { siteConfig } from "../config/siteConfig";
 
 interface CommentSectionProps {
-  postId: number;
+  postId: string;
 }
 
 export default function CommentSection({ postId }: CommentSectionProps) {

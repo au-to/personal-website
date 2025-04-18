@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     await connectToDatabase()
     
     const comments = await Comment.find({ 
-      postId: parseInt(postId),
+      postId: postId,
       isApproved: true
     }).sort({ createdAt: -1 })
     
