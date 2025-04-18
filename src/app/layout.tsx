@@ -6,6 +6,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import PageTransition from "./components/PageTransition";
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import { siteConfig } from "../../siteConfig";
 
 // 动态导入鼠标跟随组件，减少初始加载时间
 const MouseFollower = dynamic(() => import('./components/MouseFollower'), {
@@ -23,8 +24,8 @@ export default function RootLayout({
   return (
     <html lang="zh" suppressHydrationWarning>
       <head>
-        <title>我的个人网站</title>
-        <meta name="description" content="使用 Next.js 构建的个人网站" />
+        <title>{ siteConfig.siteName }</title>
+        <meta name="description" content="使用 Next.js 构建的现代化个人网站" />
       </head>
       <body className={inter.className}>
         <ThemeProvider>

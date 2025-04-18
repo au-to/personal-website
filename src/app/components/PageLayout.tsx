@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import Navbar from "./Navbar";
+import { siteConfig } from "../../../siteConfig";
 
 interface PageLayoutProps {
   title: string;
@@ -61,7 +62,7 @@ export default function PageLayout({
         <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <p className="text-center text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} 我的个人空间. All rights reserved.
+              © {new Date().getFullYear()} {siteConfig.siteName}. All rights reserved.
             </p>
           </div>
         </footer>

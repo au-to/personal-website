@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { siteConfig } from "../../../siteConfig";
 
 export default function Footer() {
   return (
@@ -85,7 +86,7 @@ export default function Footer() {
         {/* 版权信息 */}
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
           <p className="text-center text-gray-500 dark:text-gray-400">
-            © {new Date().getFullYear()} 我的个人空间. All rights reserved.
+            © {new Date().getFullYear()} {siteConfig.siteName}. All rights reserved.
           </p>
         </div>
       </div>
