@@ -9,6 +9,7 @@ import Card from "../components/Card";
 import Tag from "../components/Tag";
 import Icon from "../components/Icon";
 import AnimatedElement from "../components/AnimatedElement";
+import Pagination from "../components/Pagination";
 import { formatReadCount, getReadCount } from "../lib/clientUtils";
 
 interface BlogListProps {
@@ -101,6 +102,7 @@ export default function BlogList({ posts, categories }: BlogListProps) {
   const [selectedCategory, setSelectedCategory] = useState("全部");
   const [searchQuery, setSearchQuery] = useState("");
   const [hoveredPost, setHoveredPost] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // 根据搜索和分类过滤文章
   const filteredPosts = posts.filter(post => {
@@ -123,6 +125,26 @@ export default function BlogList({ posts, categories }: BlogListProps) {
     // 同时满足分类和搜索条件
     return matchesCategory && matchesSearch;
   });
+
+  // 分页相关计算
+  const postsPerPage = siteConfig.blog.postsPerPage || 10;
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+  const isPaginationEnabled = siteConfig.blog.enablePage && filteredPosts.length > postsPerPage;
+  
+  // 获取当前页的文章
+  const currentPosts = isPaginationEnabled
+    ? filteredPosts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
+    : filteredPosts;
+
+  // 切换页面时滚动到顶部
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
+  // 处理页面变化
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <PageLayout title="博客">
@@ -185,7 +207,7 @@ export default function BlogList({ posts, categories }: BlogListProps) {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence>
-            {filteredPosts.map((post, index) => (
+            {currentPosts.map((post, index) => (
               <AnimatedElement
                 key={post.id}
                 index={index}
@@ -196,6 +218,15 @@ export default function BlogList({ posts, categories }: BlogListProps) {
             ))}
           </AnimatePresence>
         </div>
+        
+        {/* 分页控件 */}
+        {isPaginationEnabled && (
+          <Pagination 
+            currentPage={currentPage} 
+            totalPages={totalPages} 
+            onPageChange={handlePageChange} 
+          />
+        )}
       </div>
     </PageLayout>
   );

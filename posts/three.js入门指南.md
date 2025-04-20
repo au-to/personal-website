@@ -1,10 +1,10 @@
 ---
 title: "Three.js入门指南"
 excerpt: "关于three.js的简易入门介绍"
-date: "2025-04-19"
-author: "ryan"
+date: "2024-07-06"
+author: "Ryan"
 category: "three.js"
-tags: ["计算机", "three,js", "框架"]
+tags: ["three.js", "框架"]
 imageUrl: "/images/three.js入门指南.png"
 ---
 

@@ -36,7 +36,10 @@ export const siteConfig = {
     // 是否启用分享功能（预留）
     enableShare: false,
     
-    // 每页显示的文章数量（预留分页功能）
+    // 是否启用博客文章分页
+    enablePage: true,
+
+    // 每页显示的文章数量
     postsPerPage: 9
   }
 }
