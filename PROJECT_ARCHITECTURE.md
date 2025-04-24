@@ -58,6 +58,7 @@
 ├── next.config.ts    # Next.js配置
 ├── tsconfig.json     # TypeScript配置
 ├── postcss.config.mjs # PostCSS配置
+├── siteConfig.ts     # 站点全局配置
 └── package.json      # 项目依赖和脚本
 ```
 

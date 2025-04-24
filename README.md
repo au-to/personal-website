@@ -63,7 +63,6 @@
 │   │   │   ├── PageTransition.tsx   # 页面过渡动画组件
 │   │   │   ├── ParallaxSection.tsx  # 视差滚动组件
 │   │   │   ├── ProjectCard.tsx      # 项目卡片组件
-│   │   │   ├── SEO.tsx              # SEO元标签组件
 │   │   │   ├── Skeleton.tsx         # 加载骨架屏组件
 │   │   │   ├── Tag.tsx              # 标签组件
 │   │   │   └── ThemeProvider.tsx    # 主题提供者组件
@@ -92,6 +91,7 @@
 │   │   └── globals.css # 全局样式
 ├── scripts/         # 辅助脚本
 │   └── create-post.js  # 创建新博客文章的脚本
+├── siteConfig.ts     # 站点全局配置
 ├── tailwind.config.js # Tailwind配置
 ├── next.config.ts    # Next.js配置
 ├── tsconfig.json     # TypeScript配置
