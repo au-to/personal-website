@@ -56,7 +56,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
             backgroundImage: `url(${
               post.imageUrl.startsWith('http') || post.imageUrl.startsWith('/') 
                 ? post.imageUrl 
-                : '/vercel.svg'
+                : `https://picsum.photos/seed/${post.slug}/800/400`
             })` 
           }}
         />

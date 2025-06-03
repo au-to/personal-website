@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['images.unsplash.com'],
+    domains: ['images.unsplash.com', 'picsum.photos'],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',

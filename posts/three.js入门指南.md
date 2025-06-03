@@ -5,7 +5,7 @@ date: "2024-07-06"
 author: "Ryan"
 category: "three.js"
 tags: ["three.js", "框架"]
-imageUrl: "/images/three.js入门指南.png"
+imageUrl: ""
 ---
 
 Three.js 是一个强大的 JavaScript 库，它让我们能够轻松地在网页上创建和渲染复杂的三维场景。无论你是想构建3D游戏、数据可视化，还是交互式艺术作品，Three.js 都能帮助你快速上手。本篇文章将带你了解Three.js 的基础知识，并展示如何创建一个简单的3D场景。

@@ -5,7 +5,7 @@ date: "2025-02-25"
 author: "Ryan"
 category: "python"
 tags: ["python"]
-imageUrl: "/images/python基础语法总结.png"
+imageUrl: ""
 ---
 
 ## 1. 变量与数据类型

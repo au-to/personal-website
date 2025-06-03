@@ -58,9 +58,9 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     const { data, content } = matter(fileContents);
     
     // 确保imageUrl是有效的URL格式
-    let imageUrl = data.imageUrl || '/vercel.svg';
+    let imageUrl = data.imageUrl || `https://picsum.photos/seed/${decodedSlug}/800/400`;
     if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
-      imageUrl = `/images/blog/${decodedSlug}.jpg`;
+      imageUrl = `https://picsum.photos/seed/${decodedSlug}/800/400`;
     }
 
     return {
