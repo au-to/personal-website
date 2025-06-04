@@ -10,10 +10,10 @@ export const siteConfig = {
   // 博客功能配置
   blog: {
     // 是否启用阅读计数
-    enableReadCount: true,
+    enableReadCount: false,
     
     // 是否在列表页显示阅读计数
-    showReadCountInList: true,
+    showReadCountInList: false,
     
     // 是否启用评论功能
     enableComments: true,

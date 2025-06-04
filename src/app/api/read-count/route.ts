@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { connectToDatabase } from '@/app/lib/mongodb'
 import ReadCount from '@/app/models/ReadCount'
 import { 
-  generateVisitorId, 
   getCachedReadCount, 
   updateCachedReadCount 
 } from '@/app/lib/readCountUtils'
@@ -49,9 +48,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '缺少文章标识符' }, { status: 400 })
     }
 
-    // 生成访问者ID
-    const visitorId = generateVisitorId(request)
-    
     // 连接数据库
     await connectToDatabase()
     
@@ -62,32 +58,18 @@ export async function POST(request: NextRequest) {
       // 如果不存在，创建新记录
       readCount = new ReadCount({
         slug,
-        count: 0,
-        visitors: []
+        count: 0
       })
     }
     
-    // 检查此访问者是否已经被记录
-    const existingVisitor = readCount.visitors.find(
-      (v: any) => v.visitorId === visitorId
-    )
+    // 直接增加计数
+    readCount.count += 1
+    readCount.updatedAt = new Date()
     
-    if (!existingVisitor) {
-      // 如果是新访问者，增加计数并记录访问
-      readCount.count += 1
-      readCount.visitors.push({
-        visitorId,
-        visitedAt: new Date()
-      })
-      
-      // 更新最后访问时间
-      readCount.updatedAt = new Date()
-      
-      await readCount.save()
-      
-      // 更新缓存
-      updateCachedReadCount(slug, readCount.count)
-    }
+    await readCount.save()
+    
+    // 更新缓存
+    updateCachedReadCount(slug, readCount.count)
     
     return NextResponse.json({ count: readCount.count })
   } catch (error) {
