@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: Props) {
           ))}
         </div>
         
-        <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-8">
+        <div className="relative aspect-[21/9] rounded-lg overflow-hidden mb-8 shadow-lg">
           <Image
             src={post.imageUrl.startsWith('http') || post.imageUrl.startsWith('/') ? post.imageUrl : '/vercel.svg'}
             alt={post.title}
@@ -89,12 +89,12 @@ export default async function BlogPostPage({ params }: Props) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         </div>
       </div>
       
       {/* 文章内容 - 使用客户端组件包装Markdown渲染 */}
-      <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-indigo-600 dark:prose-a:text-indigo-400 hover:prose-a:text-indigo-500 dark:hover:prose-a:text-indigo-300 prose-code:text-pink-500 dark:prose-code:text-pink-400 prose-pre:bg-gray-50 dark:prose-pre:bg-gray-800 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700 prose-pre:rounded-lg prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:italic prose-strong:text-gray-900 dark:prose-strong:text-white prose-em:text-gray-900 dark:prose-em:text-white prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-table:border-collapse prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:p-2 prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:p-2 markdown-body">
+      <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-indigo-600 dark:prose-a:text-indigo-400 hover:prose-a:text-indigo-500 dark:hover:prose-a:text-indigo-300 prose-code:text-pink-500 dark:prose-code:text-pink-400 prose-pre:bg-gray-50 dark:prose-pre:bg-gray-800 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700 prose-pre:rounded-lg prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:italic prose-strong:text-gray-900 dark:prose-strong:text-white prose-em:text-gray-900 dark:prose-em:text-white prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-table:border-collapse prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:p-2 prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:p-2 markdown-body w-full overflow-hidden">
         <BlogPostContent content={post.content} />
       </div>
       

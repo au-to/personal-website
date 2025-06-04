@@ -235,7 +235,7 @@
 
 /* Markdown 样式 */
 .markdown-content h1 {
-  @apply text-3xl font-bold mt-8 mb-4 text-gray-900 dark:text-white;
+  @apply text-3xl font-bold mt-0 mb-4 text-gray-900 dark:text-white;
 }
 
 .markdown-content h2 {

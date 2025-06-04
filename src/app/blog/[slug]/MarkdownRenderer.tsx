@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -12,9 +12,64 @@ interface MarkdownRendererProps {
   content: string;
 }
 
+interface TocItem {
+  id: string;
+  title: string;
+  level: number;
+  items?: TocItem[];
+}
+
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
+  const [tocItems, setTocItems] = useState<TocItem[]>([]);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // 提取标题并生成目录
+  useEffect(() => {
+    // 首先移除代码块中的内容，避免提取代码块中的注释
+    const contentWithoutCodeBlocks = content.replace(/```[\s\S]*?```/g, '');
+    
+    // 使用正则表达式提取标题
+    const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+    const matches = [...contentWithoutCodeBlocks.matchAll(headingRegex)];
+    
+    const items: TocItem[] = [];
+    
+    matches.forEach(match => {
+      const level = match[1].length;
+      const title = match[2].trim();
+      const id = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
+      
+      if (level <= 3) { // 只提取 h1, h2, h3 标题
+        items.push({
+          id,
+          title,
+          level
+        });
+      }
+    });
+    
+    setTocItems(items);
+  }, [content]);
+
+  // 移除了滚动监听，不再高亮当前可见的标题
+
   // 自定义React Markdown组件
   const customComponents: Components = {
+    h1(props) {
+      const { children, ...rest } = props;
+      const id = children?.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '') || '';
+      return <h1 id={id} {...rest}>{children}</h1>;
+    },
+    h2(props) {
+      const { children, ...rest } = props;
+      const id = children?.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '') || '';
+      return <h2 id={id} {...rest}>{children}</h2>;
+    },
+    h3(props) {
+      const { children, ...rest } = props;
+      const id = children?.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '') || '';
+      return <h3 id={id} {...rest}>{children}</h3>;
+    },
     a(props) {
       const { href, children, ...rest } = props;
       return (
@@ -82,14 +137,77 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     }
   };
 
+  // 渲染目录项
+  const renderTocItem = (item: TocItem) => {
+    return (
+      <li key={item.id} className={`mb-2 ${item.level > 1 ? 'ml-' + (item.level - 1) * 4 : ''}`}>
+        <a 
+          href={`#${item.id}`} 
+          className="block py-1 px-2 rounded transition-colors no-underline hover:bg-gray-100 dark:hover:bg-gray-800"
+          onClick={(e) => {
+            e.preventDefault();
+            const element = document.getElementById(item.id);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        >
+          {item.title}
+        </a>
+      </li>
+    );
+  };
+
+  const [tocVisible, setTocVisible] = useState<boolean>(true);
+
+  const toggleToc = () => {
+    setTocVisible(!tocVisible);
+  };
+
   return (
-    <ReactMarkdown
-      components={customComponents}
-      remarkPlugins={[remarkGfm]}
-    >
-      {content}
-    </ReactMarkdown>
+    <div className="flex flex-col md:flex-row gap-8 items-start">
+      {/* 文章内容 */}
+      <div ref={contentRef} className="flex-1 pt-0">
+        <ReactMarkdown
+          components={customComponents}
+          remarkPlugins={[remarkGfm]}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+      
+      {/* 目录 */}
+      {tocItems.length > 0 && (
+        <div className="md:w-64 lg:w-72 flex-shrink-0 md:mt-0">
+          <div className="sticky top-24 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg transition-all duration-300">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">目录</h3>
+              <button 
+                onClick={toggleToc}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none"
+                aria-label={tocVisible ? '收起目录' : '展开目录'}
+              >
+                {tocVisible ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 15.707a1 1 0 010-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M15.707 4.293a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-5-5a1 1 0 011.414-1.414L10 8.586l4.293-4.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </button>
+            </div>
+            <nav className={`transition-all duration-300 ${tocVisible ? 'max-h-[calc(100vh-180px)] opacity-100 overflow-y-auto pr-1' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+              <ul className="space-y-1">
+                {tocItems.map(renderTocItem)}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default MarkdownRenderer; 
+export default MarkdownRenderer;
