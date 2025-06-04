@@ -71,7 +71,7 @@ export default function AboutPage() {
   return (
     <ClientOnly fallback={fallback}>
       <PageLayout
-        title="关于我"
+        title=""
         description="了解我的故事、技能和经历"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

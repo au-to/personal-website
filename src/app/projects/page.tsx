@@ -54,8 +54,8 @@ export default function ProjectsPage() {
   return (
     <ClientOnly fallback={fallback}>
       <PageLayout 
-        title="我的项目" 
-        description="探索我的一些精选项目，每个项目都凝聚着我的热情和创意。"
+        title="" 
+        description="探索我的一些精选项目"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (

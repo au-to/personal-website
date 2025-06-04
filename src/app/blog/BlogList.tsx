@@ -141,7 +141,7 @@ export default function BlogList({ posts, categories }: BlogListProps) {
   };
 
   return (
-    <PageLayout title="博客">
+    <PageLayout title="" description="阅读我的博客文章">
       <div className="mb-6">
         {/* 搜索框 */}
         <div className="mb-6">

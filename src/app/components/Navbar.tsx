@@ -72,16 +72,6 @@ export default function Navbar() {
               项目
             </Link>
             <Link
-              href="/tech"
-              className={`${
-                isScrolled
-                  ? "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
-                  : "text-white hover:text-gray-200"
-              } transition-colors duration-300`}
-            >
-              技术栈
-            </Link>
-            <Link
               href="/blog"
               className={`${
                 isScrolled
@@ -100,6 +90,18 @@ export default function Navbar() {
               } transition-colors duration-300`}
             >
               关于
+            </Link>
+            <Link
+              href="https://github.com/au-to"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${
+                isScrolled
+                  ? "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+                  : "text-white hover:text-gray-200"
+                } transition-colors duration-300`}
+            >
+              github
             </Link>
           </div>
 
@@ -195,13 +197,6 @@ export default function Navbar() {
               项目
             </Link>
             <Link
-              href="/tech"
-              className="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              技术栈
-            </Link>
-            <Link
               href="/blog"
               className="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
               onClick={() => setIsMenuOpen(false)}
@@ -214,6 +209,15 @@ export default function Navbar() {
               onClick={() => setIsMenuOpen(false)}
             >
               关于
+            </Link>
+            <Link
+              href="https://github.com/au-to"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              github
             </Link>
           </div>
         </div>
