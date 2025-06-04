@@ -48,51 +48,45 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
       onMouseLeave={() => setHoveredPost(null)}
     >
       <div className="relative h-48 overflow-hidden">
-        <div
-          className={`absolute inset-0 bg-cover bg-center transition-transform duration-500 ${
-            hoveredPost === post.id ? 'scale-105' : 'scale-100'
-          }`}
-          style={{ 
-            backgroundImage: `url(${
-              post.imageUrl.startsWith('http') || post.imageUrl.startsWith('/') 
-                ? post.imageUrl 
-                : `https://picsum.photos/seed/${post.slug}/800/400`
-            })` 
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-          <div>
-            <Tag variant="primary" size="sm" className="mr-2">
-              {post.category}
-            </Tag>
-            <span className="text-xs text-white">
-              {post.date} · {post.readTime}
-            </span>
-          </div>
-          {siteConfig.blog.enableReadCount && siteConfig.blog.showReadCountInList && (
-            <div className="flex items-center text-xs text-white">
-              <Icon name="eye" className="mr-1" />
-              {isLoading ? '...' : formatReadCount(readCount)}
+        <a href={`/blog/${post.slug}`} className="block h-full">
+          <div
+            className={`absolute inset-0 bg-cover bg-center transition-transform duration-500 ${
+              hoveredPost === post.id ? 'scale-105' : 'scale-100'
+            }`}
+            style={{ 
+              backgroundImage: `url(${
+                post.imageUrl.startsWith('http') || post.imageUrl.startsWith('/') 
+                  ? post.imageUrl 
+                  : `https://picsum.photos/seed/${post.slug}/800/400`
+              })` 
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+            <div>
+              <Tag variant="primary" size="sm" className="mr-2">
+                {post.category}
+              </Tag>
+              <span className="text-xs text-white">
+                {post.date} · {post.readTime}
+              </span>
             </div>
-          )}
-        </div>
+            {siteConfig.blog.enableReadCount && siteConfig.blog.showReadCountInList && (
+              <div className="flex items-center text-xs text-white">
+                <Icon name="eye" className="mr-1" />
+                {isLoading ? '...' : formatReadCount(readCount)}
+              </div>
+            )}
+          </div>
+        </a>
       </div>
 
       {/* 文章内容 */}
       <div className="flex flex-col flex-grow p-4">
         <h3 className="text-lg font-semibold mb-2 line-clamp-2">{post.title}</h3>
-        <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-3 mb-4">
+        <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-3">
           {post.excerpt}
         </p>
-        <div className="mt-auto">
-          <a
-            href={`/blog/${post.slug}`}
-            className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            阅读更多
-          </a>
-        </div>
       </div>
     </Card>
   );
