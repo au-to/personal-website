@@ -3,7 +3,7 @@ title: "python基础语法总结-速记版"
 excerpt: "适合于对python基础语法的快速复习"
 date: "2025-02-25"
 author: "Ryan"
-category: "python"
+category: "后端"
 tags: ["python"]
 imageUrl: ""
 ---

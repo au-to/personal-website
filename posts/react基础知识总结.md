@@ -3,7 +3,7 @@ title: "react基础知识总结-速记版"
 excerpt: "适合于对React基础语法的快速复习"
 date: "2025-03-04"
 author: "Ryan"
-category: "react"
+category: "前端"
 tags: ["react"]
 imageUrl: ""
 ---

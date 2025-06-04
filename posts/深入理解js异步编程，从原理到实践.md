@@ -3,7 +3,7 @@ title: "深入理解javaScript异步编程，从原理到实践"
 excerpt: "介绍javaScript的异步编程机制"
 date: "2024-09-22"
 author: "Ryan"
-category: "javaScript"
+category: "前端"
 tags: ["JavaScript"]
 imageUrl: ""
 ---

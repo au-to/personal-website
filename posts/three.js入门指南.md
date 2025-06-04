@@ -3,8 +3,8 @@ title: "Three.js入门指南"
 excerpt: "关于three.js的简易入门介绍"
 date: "2024-07-06"
 author: "Ryan"
-category: "three.js"
-tags: ["three.js", "框架"]
+category: "前端"
+tags: ["three.js", "可视化"]
 imageUrl: ""
 ---
 

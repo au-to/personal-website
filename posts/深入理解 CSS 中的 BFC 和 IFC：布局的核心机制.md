@@ -3,7 +3,7 @@ title: "深入理解 CSS 中的 BFC 和 IFC：布局的核心机制"
 excerpt: "介绍 css 的 BFC 和 IFC"
 date: "2025-02-06"
 author: "Ryan"
-category: "css"
+category: "前端"
 tags: ["css"]
 imageUrl: ""
 ---

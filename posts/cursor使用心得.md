@@ -3,8 +3,8 @@ title: "Cursor使用心得"
 excerpt: "关于自己使用Cursor的一些心得分享"
 date: "2025-01-15"
 author: "Ryan"
-category: "工具链"
-tags: ["工具链"]
+category: "开发工具"
+tags: ["AI工具"]
 imageUrl: ""
 ---
 

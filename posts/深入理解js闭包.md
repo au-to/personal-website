@@ -3,7 +3,7 @@ title: "深入理解javaScript闭包"
 excerpt: "介绍javaScript的闭包机制"
 date: "2024-10-24"
 author: "Ryan"
-category: "javaScript"
+category: "前端"
 tags: ["javaScript"]
 imageUrl: ""
 ---

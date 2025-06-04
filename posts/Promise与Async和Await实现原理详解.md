@@ -3,7 +3,7 @@ title: "JavaScript Promise与Async/Await实现原理详解"
 excerpt: "介绍Promise与Async/Await实现原理"
 date: "2025-02-16"
 author: "Ryan"
-category: "javaScript"
+category: "前端"
 tags: ["javaScript"]
 imageUrl: ""
 ---
