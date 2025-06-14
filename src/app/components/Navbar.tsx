@@ -22,7 +22,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`group fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm opacity-100"
           : "bg-transparent opacity-0 hover:opacity-100"
@@ -45,7 +45,7 @@ export default function Navbar() {
               width={24} 
               height={24} 
               className={`h-6 w-auto transition-opacity duration-300 ${
-                isScrolled ? "opacity-100" : "opacity-0"
+                isScrolled ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               }`}
             />
             <span>{ siteConfig.siteName }</span>

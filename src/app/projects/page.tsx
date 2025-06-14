@@ -54,7 +54,7 @@ export default function ProjectsPage() {
   return (
     <ClientOnly fallback={fallback}>
       <PageLayout 
-        title="" 
+        title="项目" 
         description="探索我的一些精选项目"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
