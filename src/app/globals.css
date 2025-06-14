@@ -4,32 +4,39 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* 更加舒适的暖米色背景 */
+    --background: 42 22% 93%;
     --foreground: 222.2 84% 4.9%;
     
-    --card: 0 0% 100%;
+    /* 卡片使用温暖的米白色 */
+    --card: 40 18% 95%;
     --card-foreground: 222.2 84% 4.9%;
  
-    --popover: 0 0% 100%;
+    /* 弹出框使用温暖米白色 */
+    --popover: 40 18% 95%;
     --popover-foreground: 222.2 84% 4.9%;
  
     --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary-foreground: 42 22% 93%;
  
-    --secondary: 210 40% 96.1%;
+    /* 次要色使用更温暖的米灰色 */
+    --secondary: 38 20% 90%;
     --secondary-foreground: 222.2 47.4% 11.2%;
  
-    --muted: 210 40% 96.1%;
+    /* 静音色使用温暖米灰色 */
+    --muted: 38 20% 90%;
     --muted-foreground: 215.4 16.3% 46.9%;
  
-    --accent: 210 40% 96.1%;
+    /* 强调色使用温暖米灰色 */
+    --accent: 38 20% 90%;
     --accent-foreground: 222.2 47.4% 11.2%;
  
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 42 22% 93%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    /* 边框和输入框使用温暖的米灰色 */
+    --border: 36 25% 85%;
+    --input: 36 25% 85%;
     --ring: 222.2 84% 4.9%;
  
     --radius: 0.5rem;
