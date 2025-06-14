@@ -36,7 +36,9 @@ export default function Navbar() {
             className={`flex items-center space-x-2 text-xl font-bold ${
               isScrolled
                 ? "text-gray-900 dark:text-white"
-                : "text-white"
+                : theme === "dark" 
+                  ? "text-white" 
+                  : "text-gray-800"
             }`}
           >
             <Image 
@@ -58,7 +60,9 @@ export default function Navbar() {
               className={`${
                 isScrolled
                   ? "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
-                  : "text-white hover:text-gray-200"
+                  : theme === "dark" 
+                    ? "text-white hover:text-gray-200" 
+                    : "text-gray-800 hover:text-gray-600"
               } transition-colors duration-300`}
             >
               首页
@@ -68,7 +72,9 @@ export default function Navbar() {
               className={`${
                 isScrolled
                   ? "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
-                  : "text-white hover:text-gray-200"
+                  : theme === "dark" 
+                    ? "text-white hover:text-gray-200" 
+                    : "text-gray-800 hover:text-gray-600"
               } transition-colors duration-300`}
             >
               项目
@@ -78,7 +84,9 @@ export default function Navbar() {
               className={`${
                 isScrolled
                   ? "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
-                  : "text-white hover:text-gray-200"
+                  : theme === "dark" 
+                    ? "text-white hover:text-gray-200" 
+                    : "text-gray-800 hover:text-gray-600"
               } transition-colors duration-300`}
             >
               博客
@@ -88,7 +96,9 @@ export default function Navbar() {
               className={`${
                 isScrolled
                   ? "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
-                  : "text-white hover:text-gray-200"
+                  : theme === "dark" 
+                    ? "text-white hover:text-gray-200" 
+                    : "text-gray-800 hover:text-gray-600"
               } transition-colors duration-300`}
             >
               关于
@@ -100,7 +110,9 @@ export default function Navbar() {
               className={`${
                 isScrolled
                   ? "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
-                  : "text-white hover:text-gray-200"
+                  : theme === "dark" 
+                    ? "text-white hover:text-gray-200" 
+                    : "text-gray-800 hover:text-gray-600"
                 } transition-colors duration-300`}
             >
               github
@@ -115,7 +127,9 @@ export default function Navbar() {
               className={`p-2 rounded-lg ${
                 isScrolled
                   ? "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  : "text-white hover:bg-white/10"
+                  : theme === "dark"
+                    ? "text-white hover:bg-white/10"
+                    : "text-gray-800 hover:bg-gray-800/10"
               } transition-colors duration-300`}
             >
               {theme === "dark" ? (
@@ -155,7 +169,9 @@ export default function Navbar() {
               className={`md:hidden p-2 rounded-lg ${
                 isScrolled
                   ? "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  : "text-white hover:bg-white/10"
+                  : theme === "dark"
+                    ? "text-white hover:bg-white/10"
+                    : "text-gray-800 hover:bg-gray-800/10"
               } transition-colors duration-300`}
             >
               <svg
